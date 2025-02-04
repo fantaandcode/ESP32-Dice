@@ -17,8 +17,8 @@ enum NModState {
 
 ScreenState currState = SEL_NDICE;
 
-NDiceState currNDiceState = NDICE_TENS;
-NModState currNModState = NMOD_SIGN;
+NDiceState currNDiceState = NDICE_ONES;
+NModState currNModState = NMOD_ONES;
 
 // get the state name for label
 const char* getScreenStateString(ScreenState queryState);
@@ -38,7 +38,7 @@ const char* getScreenStateString(ScreenState queryState) {
 // update state UI element
 void updateStateUI() {
   String state_nm = getScreenStateString(currState);
-  draw_text(state_nm, 216, 312, 1, UNFOCUSED);
+  drawText(state_nm, 216, 312, 1, UNFOCUSED);
 }
 
 // advance the state
@@ -60,106 +60,84 @@ void advanceState() {
 }
 
 // handle the number of dice
-void handleNDice() {
-  if(buttons[1].fell() || buttons[2].fell()) {
-    Serial.print(getDiceString() + " -> ");
-  }
-
+// state order: ONES -> TENS
+// default: ONES
+bool handleNDice() {
+  int encoderChange = encoderKnobCheck();
   switch (currNDiceState) {
     case NDICE_TENS:
-      if(buttons[1].fell()) {
-        cycleDiceTens(-1);
-      }else if(buttons[2].fell()) {
-        cycleDiceTens(1);
-      }else if(buttons[0].fell()) {
+      // update value
+      if (encoderChange != 0) {
+        cycleDiceTens(encoderChange);
+        return true;
+      }
+      // change between ones and tens
+      if(buttons[0].fell()) {
         currNDiceState = NDICE_ONES;
       }
       break;
     case NDICE_ONES:
-      if(buttons[1].fell()) {
-        cycleDiceOnes(-1);
-      }else if(buttons[2].fell()) {
-        cycleDiceOnes(1);
-      }else if(buttons[0].fell()) {
+      // update value
+      if (encoderChange != 0) {
+        cycleDiceOnes(encoderChange);
+        return true;
+      }
+      // change between ones and tens
+      if(buttons[0].fell()) {
         currNDiceState = NDICE_TENS;
       }
       break;
   }
-
-  if(buttons[1].fell() || buttons[2].fell()) {
-    Serial.println(getDiceString());
-  }
+  return false;
 }
 
 // handle the number of pips on the dice
-void handleNPips() {
-  if(buttons[1].fell() || buttons[2].fell()) {
-    Serial.print(getDiceString() + " -> ");
+bool handleNPips() {
+  int encoderChange = encoderKnobCheck();
+  if (encoderChange != 0) {
+    cycleDicePips(encoderChange);
+    return true;
   }
-
-  if(buttons[1].fell()) {
-    cycleDicePips(-1);
-  }else if(buttons[2].fell()) {
-    cycleDicePips(1);
-  }
-
-  if(buttons[1].fell() || buttons[2].fell()) {
-    Serial.println(getDiceString());
-  }
+  return false;
 }
 
 // handle the modifier
-void handleNMod() {
-  if(buttons[1].fell() || buttons[2].fell()) {
-    Serial.print(getDiceString() + " -> ");
-  }
+// state order: SIGN -> ONES -> TENS
+// default: ONES
+bool handleNMod() {
+  int encoderChange = encoderKnobCheck();
 
   switch (currNModState) {
     case NMOD_SIGN:
-      if (buttons[1].fell() || buttons[2].fell()) { // either will swap the sign
+      if (encoderChange != 0) {
         toggleModSign();
-      }else if(buttons[0].fell()) {
-        currNModState = NMOD_TENS;
+        return true;
       }
-      break;
-    case NMOD_TENS:
-      if(buttons[1].fell()) {
-        cycleModTens(-1);
-      }else if(buttons[2].fell()) {
-        cycleModTens(1);
-      }else if(buttons[0].fell()) {
+      if(buttons[0].fell()) {
         currNModState = NMOD_ONES;
       }
       break;
-    case NMOD_ONES:
-      if(buttons[1].fell()) {
-        cycleModOnes(-1);
-      }else if(buttons[2].fell()) {
-        cycleModOnes(1);
-      }else if(buttons[0].fell()) {
+    case NMOD_TENS:
+      if (encoderChange != 0) {
+        cycleModTens(encoderChange);
+        return true;
+      }
+      if(buttons[0].fell()) {
         currNModState = NMOD_SIGN;
       }
       break;
+    case NMOD_ONES:
+      if (encoderChange != 0) {
+        cycleModOnes(encoderChange);
+        return true;
+      }
+      if(buttons[0].fell()) {
+        currNModState = NMOD_TENS;
+      }
+      break;
   }
-
-  if(buttons[1].fell() || buttons[2].fell()) {
-    Serial.println(getDiceString());
-  }
+  return false;
 }
-
-String getDiceString() {
-  String tmp = "";
-  tmp += String(numDiceTens * 10 + numDiceOnes);
-  tmp += "d" + String(numPipsInc[numPipsIdx]);
-  if (numModSign == -1) {
-    tmp += "-";
-  } else if (numModSign == 1) {
-    tmp += "+";
-  }
-  tmp += String(numModTens * 10 + numModOnes);
-  return tmp;
-}
-
 
 
 

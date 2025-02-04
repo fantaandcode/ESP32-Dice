@@ -65,3 +65,64 @@ void numMod00() {
     numModOnes = 1;
   }
 }
+
+String getNDiceTotString() {
+  int nDiceTot = numDiceTens * 10 + numDiceOnes;
+  char buffer[3];
+  snprintf(buffer, sizeof(buffer), "%2d", nDiceTot);
+  return buffer;
+}
+
+String getDicePipsString() {
+  int nPips = numPipsInc[numPipsIdx];
+  char buffer[4];
+  snprintf(buffer, sizeof(buffer), "%3d", nPips);
+  return buffer;
+}
+
+String getModSignString() {
+  String modSignChar;
+  if (numModSign == -1) {
+    modSignChar = "-";
+  } else if (numModSign == 1) {
+    modSignChar = "+";
+  }
+  return modSignChar;
+}
+
+String getDiceModString() {
+  int nModTot = numModTens * 10 + numModOnes;
+  char buffer[3];
+  snprintf(buffer, sizeof(buffer), "%2d", nModTot);
+  return buffer;
+}
+
+String getDiceString() {
+  char buffer[14];
+
+  snprintf(buffer, sizeof(buffer), "%s d %s %s %s", getNDiceTotString(), getDicePipsString(), getModSignString(), getDiceModString());
+
+  return buffer;
+}
+
+int rollDice() {
+  int result = 0;
+  for (int i = 0; i < numDiceTens * 10 + numDiceOnes; i++) {
+    result += (esp_random() % numPipsInc[numPipsIdx]) + 1;
+  }
+  result += numModTens * 10 + numModOnes;
+  return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

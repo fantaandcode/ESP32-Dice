@@ -9,35 +9,31 @@ ESP32Encoder encoder;
 
 // Variables
 int encoderValue = 0;
-int lastEncoderValue = 0;
+// int lastEncoderValue = 0;
 bool buttonPressed = false;
 
+Bounce encoderButton;
+
 void encoderSetup() {
+  Serial.print("Setting up encoder knob ");
+  // knob setup
   encoder.attachHalfQuad(ENC_CLK, ENC_DT);
   encoder.clearCount();
   pinMode(ENC_SW, INPUT_PULLUP);
+  Serial.print("and button... ");
+  // button setup
+  encoderButton.attach(ENC_SW);
+  encoderButton.interval(20);
+  Serial.println("Done!");
 }
 
-void encoderCheck() {
+int encoderKnobCheck() {
+  // update encoder knob value
   encoderValue = encoder.getCount() / 2;
-
-  // Update Display if Encoder Value Changes
-  if (encoderValue != lastEncoderValue) {
-    lastEncoderValue = encoderValue;
-    tft.setCursor(4, 4);
-    tft.print("Value: ");
-    tft.print(encoderValue);
-    tft.print("    ");
+  if (encoderValue != 0) {
+    int val_change = encoderValue;
+    encoder.clearCount();
+    return val_change;
   }
-
-  // Read Button State
-  if (digitalRead(ENC_SW) == LOW && !buttonPressed) {
-    buttonPressed = true;
-    tft.setCursor(4, 14);
-    tft.print("Button Pressed!");
-  } else if (digitalRead(ENC_SW) == HIGH && buttonPressed) {
-    buttonPressed = false;
-    tft.setCursor(4, 14);
-    tft.print("               ");
-  }
+  return 0;
 }

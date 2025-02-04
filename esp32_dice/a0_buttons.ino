@@ -1,18 +1,20 @@
 #include <Bounce2.h>
-// buttons1412
-const int buttonPins[] = {33, 32, 14, 12, 25, 26};  // change, down, up, mode
+// change mode
+// change sign
+const int buttonPins[] = {33, 32, 14, 12, 25, 26};
 const int numButtons = sizeof(buttonPins) / sizeof(buttonPins[0]);
 Bounce buttons[numButtons];
 
 // button setups
 void buttonSetup() {
-  Serial.print("Setting up buttons: ");
+  Serial.print("Setting up buttons:");
   for (int i = 0; i < numButtons; i++){
     pinMode(buttonPins[i], INPUT_PULLUP);
     buttons[i].attach(buttonPins[i]);
     buttons[i].interval(20);
-    Serial.println(i);
+    Serial.print(" " + String(i) + "...");
   }
+  Serial.println(" Done!");
 }
 
 // button UI indicators

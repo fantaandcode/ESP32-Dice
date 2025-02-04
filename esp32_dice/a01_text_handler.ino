@@ -5,7 +5,7 @@ void textSetup() {
   // tft.setFont(&cozette13pt7b);
 }
 
-void draw_text(String text, int x, int y, int text_size, uint16_t color) {
+void drawText(String text, int x, int y, int text_size, uint16_t color) {
   tft.setCursor(x, y);
   tft.setTextColor(color, BG);
   // tft.setTextColor(color);
