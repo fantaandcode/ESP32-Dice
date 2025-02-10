@@ -35,26 +35,17 @@ const char* getScreenStateString(ScreenState queryState) {
   }
 }
 
-// update state UI element
-void updateStateUI() {
-  String state_nm = getScreenStateString(currState);
-  drawText(state_nm, 216, 312, 1, UNFOCUSED);
-}
-
 // advance the state
 void advanceState() {
   switch (currState) {
     case SEL_NDICE:
       currState = SEL_PIPS;
-      updateStateUI();
       break;
     case SEL_PIPS:
       currState = SEL_MOD;
-      updateStateUI();
       break;
     case SEL_MOD:
       currState = SEL_NDICE;
-      updateStateUI();
       break;
   }
 }

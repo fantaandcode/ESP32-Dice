@@ -24,11 +24,11 @@ void buttonStateIndicator() {
   for (int i = 0; i < numButtons; i++) {
     buttons[i].update();
     if (buttons[i].fell()) {
-      tft.fillRect(66+(ind_width + ind_buffer)*i, 312, ind_width, 7, FOCUSED);
+      tft.fillRect(66+(ind_width + ind_buffer)*i, 312, ind_width, 7, UI_FOCUSED);
       Serial.println("Button " + String(i) + " pressed");
     }
     if (buttons[i].rose()) {
-      tft.fillRect(66+(ind_width + ind_buffer)*i, 312, ind_width, 7, UNFOCUSED);
+      tft.fillRect(66+(ind_width + ind_buffer)*i, 312, ind_width, 7, UI_UNFOCUSED);
     }
   }
 }

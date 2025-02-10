@@ -15,6 +15,7 @@ void loop() {
     case SEL_NDICE:
       if(buttons[1].fell()) {
         advanceState();
+        updateStateUI();
       }
       if (handleNDice()) {
         diceRegion();
@@ -24,6 +25,7 @@ void loop() {
     case SEL_PIPS:
       if(buttons[1].fell()) {
         advanceState();
+        updateStateUI();
       }
       if (handleNPips()) {
         diceRegion();
@@ -33,6 +35,7 @@ void loop() {
     case SEL_MOD:
       if(buttons[1].fell()) {
         advanceState();
+        updateStateUI();
       }
       if (handleNMod()) {
         diceRegion();
@@ -41,18 +44,18 @@ void loop() {
       break;
   }
 
+  // roll dice
   if (encoderButton.fell()) {
     Serial.println("Encoder button pressed");
     int rollResult = rollDice();
     Serial.println(rollResult);
   }
 
+  // update dice region if any button is pressed
   if (buttons[0].fell() || buttons[1].fell() || buttons[2].fell() || buttons[3].fell() || buttons[4].fell() || buttons[5].fell()) {
     diceRegion();
   }
   
   // report loop time
   loopTime = millis() - startMillis;
-  // Serial.print("LoopTime:");
-  // Serial.println(loopTime);
 }

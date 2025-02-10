@@ -1,3 +1,7 @@
-const uint16_t UNFOCUSED = 0x4208,
+const uint16_t UI_UNFOCUSED = 0x4208,
+  UI_FOCUSED = 0xFC40,
+  TEXT_UNFOCUSED = 0x6201,
+  TEXT_BG = 0x18e3,
+  TEXT_CRIT = 0x66ec,
   FOCUSED = 0xFC40,
   BG = 0x0000;
