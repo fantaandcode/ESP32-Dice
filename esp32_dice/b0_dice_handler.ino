@@ -116,7 +116,8 @@ int rollDice() {
   char buffer[10];
   String formattedString = String(buffer);  // Store in a String variable
   int result = 0;
-  tft.fillRect(resultStartX, resultStartY, 240, 120, BG);
+  tft.fillRect(resultStartX, resultStartY, 240, charHeight * 11, BG);
+  tft.fillRect(resultStartX, resultStartY + charHeight * 11 + 4, 240, charHeight, BG);
   int totalDice = numDiceTens * 10 + numDiceOnes;
   for (int i = 0; i < totalDice; i++) {
     int tmp = (esp_random() % numPipsInc[numPipsIdx]) + 1;
@@ -124,25 +125,29 @@ int rollDice() {
     if (tmp == numPipsInc[numPipsIdx]) {
       tft.setTextColor(TEXT_CRIT, BG);
       tft.print(String(buffer));
+      delay(10);
     } else {
       tft.setTextColor(TEXT_UNFOCUSED, BG);
       tft.print(String(buffer));
+      delay(10);
     }
     result += tmp;
   }
   // calc mod
   int totMod = (numModTens * 10 + numModOnes);
   sprintf(buffer, "%2d", totMod);
+  tft.setTextColor(TEXT_UNFOCUSED, BG);
   tft.print(" " + getModSignString() + String(buffer));
   // add mod
   result += totMod * numModSign;
   // draw separator line
-  tft.drawLine(0, resultStartY + charHeight * (totalDice / 10 + 1) + 1, 240, resultStartY + charHeight * (totalDice / 10 + 1) + 1, UI_UNFOCUSED);
+  // tft.drawLine(0, resultStartY + charHeight * 11 + 1, 240, resultStartY + charHeight * 11 + 1, UI_UNFOCUSED);
   // print final result
-  tft.setCursor(resultStartX, resultStartY + charHeight * (totalDice / 10 + 1) + 4);  // move cursor to after separator line
+  tft.setCursor(resultStartX, resultStartY + charHeight * 11 + 4);  // move cursor to after separator line
   tft.setTextColor(FOCUSED);  // change text color to stand out
   sprintf(buffer, "%4d", result);
   tft.print(String(buffer));
+  // tft.drawLine(0, resultStartY + charHeight * 12 + 5, 240, resultStartY + charHeight * 12 + 5, UI_UNFOCUSED);
   return result;
 }
 
